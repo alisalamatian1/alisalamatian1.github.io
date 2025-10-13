@@ -1,0 +1,40 @@
+backup/
+
+# Jekyll build output
+_site/
+
+# Dependency directories
+.bundle/
+node_modules/
+
+# Bundler and Ruby gems
+/.vendor/bundle
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*.swn
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# Logs and temporary files
+log/
+tmp/
+
+# Jekyll assets cache
+.asset-cache/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# npm / yarn locks (optional)
+package-lock.json
+yarn.lock
+
+# Other generated files
+public/
