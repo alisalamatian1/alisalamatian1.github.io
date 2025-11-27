@@ -15,7 +15,7 @@ I really enjoy multimodal research and collaborating with others so feel free to
 
 
 ## News
-- 2025.08: Our [**ChartGaze**](https://www.arxiv.org/pdf/2509.13282) paper was accepted to [EMNLP 2025](https://2025.emnlp.org/) (main proceedings).
+- 2025.08: Our [**ChartGaze**](https://aclanthology.org/2025.emnlp-main.607/) paper was accepted to [EMNLP 2025](https://2025.emnlp.org/) (main proceedings).
 
 - 2025.8: Received Trek Excellence Scholarship (top 5% of faculty of science)
 

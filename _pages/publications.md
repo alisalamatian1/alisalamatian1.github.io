@@ -14,6 +14,6 @@ author_profile: true
   <div>
     <strong>[1] __Ali Salamatian__, Amirhossein Abaskohi, Wan-Cyuan Fan, Mir Rayat Imtiaz Hossain, Leonid Sigal, Giuseppe Carenini</strong><br>
     <em>ChartGaze: Enhancing Chart Understanding in LVLMs with Eye-Tracking Guided Attention Refinement</em><br>
-    EMNLP 2025 <a href="https://www.arxiv.org/pdf/2509.13282">Paper link</a>
+    EMNLP 2025 <a href="https://aclanthology.org/2025.emnlp-main.607/">Paper link</a>, <a href="https://underline.io/lecture/130359-chartgaze-enhancing-chart-understanding-in-lvlms-with-eye-tracking-guided-attention-refinement">Presentation</a> 
   </div>
 </div>
