@@ -13,6 +13,7 @@ Previously, I collaborated with [Prof. Giuseppe Carenini](https://www.cs.ubc.ca/
 
 I really enjoy multimodal research and collaborating with others so feel free to reach out if you have any interesting ideas!
 
+I also really enjoy going on hikes and reading books. The last book I really enjoyed reading was When Nietzsche Wept by Irvin D. Yalom. Currently, I'm re-reading The Power of Habit by Charles Duhigg. Reach out if you have any book suggestions!
 
 ## News
 - 2025.08: Our [**ChartGaze**](https://aclanthology.org/2025.emnlp-main.607/) paper was accepted to [EMNLP 2025](https://2025.emnlp.org/) (main proceedings).
