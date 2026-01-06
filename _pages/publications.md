@@ -23,6 +23,6 @@ author_profile: true
   <div>
       [2] <strong>Ali Salamatian</strong>, Ke (Steve) Ren, Kieran Pattison, Cyrus Neary<br>
       <em>Value Vision-Language-Action Planning & Search</em><br>
-      Preprint <a href="{{ site.url }}/files/VVLAPS.pdf">Paper </a>
+      Preprint <a href="http://arxiv.org/abs/2601.00969">Paper </a>
   </div>
 </div>
