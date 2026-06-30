@@ -1,0 +1,324 @@
+---
+title: "ChartGaze"
+layout: project
+permalink: /publications/chartgaze/
+---
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header-section">
+    <h1 class="paper-title">
+      <span class="title-highlight">ChartGaze</span>: Enhancing Chart Understanding in LVLMs<br>with Eye-Tracking Guided Attention Refinement
+    </h1>
+
+    <div class="author-block">
+      Ali Salamatian<sup>1</sup>,&nbsp;
+      Amirhossein Abaskohi<sup>1</sup>,&nbsp;
+      Wan-Cyuan Fan<sup>1,2</sup>,&nbsp;
+      Mir Rayat Imtiaz Hossain<sup>1,2</sup>,&nbsp;
+      Leonid Sigal<sup>1,2,3</sup>,&nbsp;
+      Giuseppe Carenini<sup>1</sup>
+    </div>
+
+    <div class="affiliation-block">
+      <sup>1</sup>University of British Columbia &nbsp;&bull;&nbsp;
+      <sup>2</sup>Vector Institute for AI &nbsp;&bull;&nbsp;
+      <sup>3</sup>CIFAR AI Chair
+    </div>
+
+    <div class="venue-block">EMNLP 2025</div>
+
+    <!-- Link buttons -->
+    <div class="link-buttons">
+      <a href="https://aclanthology.org/2025.emnlp-main.607/" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-file-alt"></i></span>
+        <span>Paper</span>
+      </a>
+      <a href="https://github.com/alisalamatian1/ChartGaze" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fab fa-github"></i></span>
+        <span>Code</span>
+      </a>
+      <a href="https://huggingface.co/datasets/alisalam/ChartGaze" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-database"></i></span>
+        <span>Dataset</span>
+      </a>
+      <a href="https://underline.io/lecture/130359-chartgaze-enhancing-chart-understanding-in-lvlms-with-eye-tracking-guided-attention-refinement" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-chalkboard"></i></span>
+        <span>Talk</span>
+      </a>
+      <a href="/papers/ChartGaze.pdf" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+        <span>PDF</span>
+      </a>
+      <a href="#BibTeX" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-quote-right"></i></span>
+        <span>Citation</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Teaser -->
+  <div class="figure-wrap" style="max-width:600px; margin-left:auto; margin-right:auto;">
+    <img src="{{ site.url }}/images/chartgaze/teaser.png" alt="ChartGaze Teaser" class="figure-img">
+    <p class="figure-caption">
+      Large Vision-Language Models (LVLMs) often attend to irrelevant chart regions when answering questions. ChartGaze collects human eye-tracking data during chart reasoning and uses it to align model attention with human gaze patterns, improving both accuracy and interpretability.
+    </p>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract-container">
+    <div class="abstract-title">Abstract</div>
+    <p class="abstract-text">
+      Charts are a crucial visual medium for communicating and representing information. While Large Vision-Language Models (LVLMs) have made progress on chart question answering (CQA), the task remains challenging, particularly when models attend to irrelevant regions of the chart. In this work, we present ChartGaze, a new eye-tracking dataset that captures human gaze patterns during chart reasoning tasks. Through a systematic comparison of human and model attention, we find that LVLMs often diverge from human gaze, leading to reduced interpretability and accuracy. To address this, we propose a gaze-guided attention refinement that aligns image-text attention with human fixations. Our approach improves both answer accuracy and attention alignment, yielding gains of up to 2.56 percentage points across multiple models. These results demonstrate the promise of incorporating human gaze to enhance both the reasoning quality and interpretability of chart-focused LVLMs.
+    </p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Dataset Section -->
+  <div class="content-section">
+    <h2 class="section-title" id="dataset"><a href="#dataset">ChartGaze Dataset</a></h2>
+    <div class="text-content">
+      <p>
+        We introduce <strong>ChartGaze</strong>, a new eye-tracking dataset pairing chart images with human gaze recordings collected during chart question answering. Participants viewed charts on a calibrated eye-tracker setup while answering reasoning questions, yielding fine-grained fixation maps that capture where humans look when interpreting visual data.
+      </p>
+      <p>
+        The dataset spans multiple chart types and question categories (trend analysis, value extraction, comparison, etc.) and includes quality-controlled gaze maps paired with verified question-answer pairs.
+      </p>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/chartgaze/ui-setup.png" alt="Eye-tracking UI setup" class="figure-img">
+      <p class="figure-caption">Eye-tracking user interface used for gaze data collection. Participants answered questions about charts while a calibrated tracker recorded fixation patterns.</p>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/chartgaze/dataset-pipeline.png" alt="Dataset creation pipeline" class="figure-img">
+      <p class="figure-caption">Overview of the dataset creation pipeline: chart images are paired with generated QA pairs, and human gaze is recorded and post-processed into fixation maps.</p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Method Section -->
+  <div class="content-section">
+    <h2 class="section-title" id="method"><a href="#method">Gaze-Guided Attention Refinement</a></h2>
+    <div class="text-content">
+      <p>
+        We propose a training-time attention refinement that minimizes the divergence between a model's image-text cross-attention maps and the corresponding human gaze fixation maps. The key insight is that human gaze serves as a proxy for <em>where relevant information lives</em> in a chart; if a model's attention aligns with where humans look, it is more likely to focus on task-relevant content.
+      </p>
+      <p>Key components:</p>
+      <ul>
+        <li><strong>Attention extraction:</strong> We extract cross-attention maps from early transformer layers, which carry the most spatial information.</li>
+        <li><strong>Gaze supervision:</strong> Fixation maps are post-processed (Gaussian smoothed with parameter σ) to match the spatial resolution of attention maps.</li>
+        <li><strong>Combined loss:</strong> The standard language modeling loss is augmented with an attention alignment loss, guiding the model without sacrificing language generation quality.</li>
+      </ul>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/chartgaze/method-pipeline.png" alt="Training pipeline overview" class="figure-img">
+      <p class="figure-caption">Overview of the gaze-guided attention refinement training. Attention maps are extracted from the LVLM and compared against human fixation maps via a KL-divergence-based loss term.</p>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/chartgaze/attn-maps.png" alt="Attention map comparison" class="figure-img">
+      <p class="figure-caption">Comparison of attention maps from models trained with (right) and without (left) the gaze-guided refinement loss. Models trained with ChartGaze data attend more closely to chart-relevant regions.</p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Results Section -->
+  <div class="content-section">
+    <h2 class="section-title" id="results"><a href="#results">Results</a></h2>
+    <div class="text-content">
+      <p>
+        Our gaze-guided refinement yields consistent improvements across four LVLMs on the ChartQA benchmark. Models fine-tuned with attention-guided loss outperform those trained with language loss alone, with gains of up to <strong>2.56 pp</strong> in QA accuracy. Notably, gaze supervision also dramatically improves attention alignment (CC, KL, SIM), confirming that the model learns to attend to chart regions that matter.
+      </p>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="left">Training</th>
+            <th class="left">Model</th>
+            <th>Test Acc. (%)</th>
+            <th>CC &uarr;</th>
+            <th>KL &darr;</th>
+            <th>SIM &uarr;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group-header"><td colspan="6">Zero-shot</td></tr>
+          <tr><td></td><td class="left">TinyLLaVA-450M</td><td>46.64</td><td>-0.078</td><td>1.810</td><td>0.267</td></tr>
+          <tr><td></td><td class="left">InternVL2-4B</td><td>49.86</td><td>-0.060</td><td>1.722</td><td>0.282</td></tr>
+          <tr><td></td><td class="left">InternVL2-8B</td><td>50.93</td><td>-0.054</td><td>1.681</td><td>0.296</td></tr>
+          <tr><td></td><td class="left"><u>ChartGemma-3B</u></td><td><u>52.39</u></td><td><u>0.100</u></td><td><u>1.559</u></td><td><u>0.323</u></td></tr>
+          <tr class="group-header"><td colspan="6">Fine-tuned (language loss only)</td></tr>
+          <tr><td></td><td class="left">TinyLLaVA-450M</td><td>62.58 &plusmn; 0.27</td><td>-0.048 &plusmn; 0.005</td><td>1.705 &plusmn; 0.031</td><td>0.288 &plusmn; 0.004</td></tr>
+          <tr><td></td><td class="left">InternVL2-4B</td><td>63.91 &plusmn; 0.20</td><td>-0.028 &plusmn; 0.004</td><td>1.532 &plusmn; 0.010</td><td>0.301 &plusmn; 0.004</td></tr>
+          <tr><td></td><td class="left">InternVL2-8B</td><td>65.36 &plusmn; 0.22</td><td>-0.017 &plusmn; 0.003</td><td><u>1.487 &plusmn; 0.009</u></td><td>0.312 &plusmn; 0.004</td></tr>
+          <tr><td></td><td class="left">ChartGemma-3B</td><td><u>72.49 &plusmn; 1.69</u></td><td><u>0.092 &plusmn; 0.004</u></td><td>1.594 &plusmn; 0.026</td><td><u>0.316 &plusmn; 0.003</u></td></tr>
+          <tr class="group-header"><td colspan="6">Fine-tuned (gaze supervision + language loss)</td></tr>
+          <tr><td></td><td class="left">TinyLLaVA-450M</td><td>63.77 &plusmn; 0.54</td><td>0.391 &plusmn; 0.007</td><td>1.132 &plusmn; 0.015</td><td>0.439 &plusmn; 0.002</td></tr>
+          <tr><td></td><td class="left">InternVL2-4B</td><td>65.45 &plusmn; 0.23</td><td>0.402 &plusmn; 0.006</td><td>1.072 &plusmn; 0.008</td><td>0.451 &plusmn; 0.004</td></tr>
+          <tr><td></td><td class="left">InternVL2-8B</td><td>67.92 &plusmn; 0.15</td><td>0.417 &plusmn; 0.006</td><td>1.036 &plusmn; 0.007</td><td><strong>0.468 &plusmn; 0.005</strong></td></tr>
+          <tr><td></td><td class="left">ChartGemma-3B</td><td><strong>72.67 &plusmn; 1.24</strong></td><td><strong>0.436 &plusmn; 0.011</strong></td><td><strong>1.033 &plusmn; 0.014</strong></td><td>0.452 &plusmn; 0.005</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="figure-caption" style="margin-top:10px;">
+      Performance of models trained with and without gaze supervision. &uarr; / &darr; indicates higher / lower is better. Underline = best within baseline group; <strong>bold</strong> = best overall.
+    </p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Ablations Section -->
+  <div class="content-section">
+    <h2 class="section-title" id="ablations"><a href="#ablations">Ablation Studies</a></h2>
+    <div class="text-content">
+      <p>We conduct four ablation studies on InternVL2-8B (unless otherwise noted) to validate design choices in ChartGaze.</p>
+    </div>
+
+    <details class="ablation-box">
+      <summary>Masked Inference: Does the model rely on human-attended regions?</summary>
+      <div class="ablation-content">
+        <p class="ablation-desc">
+          We test whether gaze-supervised models truly depend on human-attended chart regions by blurring or masking those areas at inference. A model that merely mimics gaze patterns would not suffer; a model that genuinely uses those regions for reasoning would see large accuracy drops.
+        </p>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="left">Condition</th>
+                <th>Acc. &uarr;</th><th>CC &uarr;</th><th>KL &darr;</th><th>SIM &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="group-header"><td colspan="5">Language loss only (baseline)</td></tr>
+              <tr><td class="left">Unperturbed</td><td>65.36</td><td>-0.017</td><td>1.487</td><td>0.312</td></tr>
+              <tr class="indent"><td class="left">Blur human gaze areas</td><td>61.02</td><td>-0.139</td><td>1.681</td><td>0.236</td></tr>
+              <tr class="indent"><td class="left">Mask human gaze areas</td><td>60.14</td><td>-0.124</td><td>1.713</td><td>0.221</td></tr>
+              <tr class="indent"><td class="left">Blur non-gaze areas</td><td>64.10</td><td>0.112</td><td>1.392</td><td>0.298</td></tr>
+              <tr class="indent"><td class="left">Mask non-gaze areas</td><td>62.85</td><td>0.064</td><td>1.456</td><td>0.274</td></tr>
+              <tr class="group-header"><td colspan="5">Gaze supervision + language loss (ours)</td></tr>
+              <tr><td class="left">Unperturbed</td><td><strong>67.92</strong></td><td><strong>0.417</strong></td><td><strong>1.036</strong></td><td><strong>0.468</strong></td></tr>
+              <tr class="indent"><td class="left">Blur human gaze areas</td><td>60.84</td><td>-0.174</td><td>1.794</td><td>0.201</td></tr>
+              <tr class="indent"><td class="left">Mask human gaze areas</td><td>59.92</td><td>-0.152</td><td>1.752</td><td>0.188</td></tr>
+              <tr class="indent"><td class="left">Blur non-gaze areas</td><td>66.82</td><td>0.284</td><td>1.218</td><td>0.395</td></tr>
+              <tr class="indent"><td class="left">Mask non-gaze areas</td><td>63.72</td><td>0.203</td><td>1.314</td><td>0.356</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="ablation-desc" style="margin-top:10px; margin-bottom:0">
+          Gaze-supervised models suffer a much larger accuracy drop (−7.08% blur, −8.00% mask) than language-only models (−4.34%, −5.22%), confirming that gaze supervision induces genuine semantic reliance on human-attended regions, not just visual mimicry.
+        </p>
+      </div>
+    </details>
+
+    <details class="ablation-box">
+      <summary>Loss Function Comparison</summary>
+      <div class="ablation-content">
+        <p class="ablation-desc">
+          We compare four loss functions for the attention alignment objective on TinyLLaVA-450M: weighted MSE (W-MSE), KL Divergence, Focal Loss, and Dice + BCE.
+        </p>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="left">Loss Function</th>
+                <th>Test Acc. &uarr;</th><th>CC &uarr;</th><th>KL &darr;</th><th>SIM &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="left"><strong>W-MSE (ours)</strong></td><td><strong>64.53</strong></td><td><strong>0.386</strong></td><td><strong>1.145</strong></td><td><strong>0.438</strong></td></tr>
+              <tr><td class="left">KL Divergence</td><td>62.36</td><td>0.306</td><td>1.209</td><td>0.380</td></tr>
+              <tr><td class="left">Focal Loss</td><td>61.06</td><td>0.339</td><td>1.188</td><td>0.388</td></tr>
+              <tr><td class="left">Dice + BCE</td><td>60.41</td><td>0.194</td><td>4.174</td><td>0.183</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details class="ablation-box">
+      <summary>Effect of Dataset Size</summary>
+      <div class="ablation-content">
+        <p class="ablation-desc">
+          We evaluate gaze supervision under low-data settings (25%, 50%, 100% of ChartGaze) on InternVL2-8B with three seeds per condition. Accuracy gains from gaze supervision become <em>more pronounced</em> as data decreases, demonstrating the value of attention supervision in low-resource settings.
+        </p>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="left">Training Setup</th>
+                <th>Test Acc. &uarr;</th><th>CC &uarr;</th><th>KL &darr;</th><th>SIM &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="group-header"><td colspan="5">Without Attention Supervision</td></tr>
+              <tr><td class="left">25% data</td><td>60.21 &plusmn; 0.73</td><td>-0.045 &plusmn; 0.005</td><td>1.602 &plusmn; 0.012</td><td>0.274 &plusmn; 0.006</td></tr>
+              <tr><td class="left">50% data</td><td>63.58 &plusmn; 0.24</td><td>-0.028 &plusmn; 0.004</td><td>1.530 &plusmn; 0.010</td><td>0.295 &plusmn; 0.005</td></tr>
+              <tr><td class="left">100% data</td><td><u>65.36 &plusmn; 0.22</u></td><td><u>-0.017 &plusmn; 0.003</u></td><td><u>1.487 &plusmn; 0.009</u></td><td><u>0.312 &plusmn; 0.004</u></td></tr>
+              <tr class="group-header"><td colspan="5">With Attention Supervision</td></tr>
+              <tr><td class="left">25% data</td><td>64.07 &plusmn; 0.26</td><td>0.297 &plusmn; 0.008</td><td>1.174 &plusmn; 0.011</td><td>0.402 &plusmn; 0.006</td></tr>
+              <tr><td class="left">50% data</td><td>66.51 &plusmn; 0.20</td><td>0.396 &plusmn; 0.007</td><td>1.065 &plusmn; 0.009</td><td>0.454 &plusmn; 0.005</td></tr>
+              <tr><td class="left">100% data</td><td><strong>67.92 &plusmn; 0.15</strong></td><td><strong>0.417 &plusmn; 0.006</strong></td><td><strong>1.036 &plusmn; 0.007</strong></td><td><strong>0.468 &plusmn; 0.005</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details class="ablation-box">
+      <summary>Gaze Map Post-Processing: &sigma; Sensitivity</summary>
+      <div class="ablation-content">
+        <p class="ablation-desc">
+          We apply a Gaussian filter (&sigma;) to gaze fixation maps before computing the attention loss. We train TinyLLaVA-450M with three &sigma; values. &sigma; = 40 achieves the best accuracy; &sigma; = 80 inflates alignment metrics by spreading attention too broadly, hurting accuracy.
+        </p>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fixation &sigma;</th>
+                <th>Test Acc. &uarr;</th><th>CC &uarr;</th><th>KL &darr;</th><th>SIM &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>20</td><td>62.89</td><td>0.277</td><td>1.875</td><td>0.272</td></tr>
+              <tr><td><strong>40 (ours)</strong></td><td><strong>63.77</strong></td><td>0.391</td><td>1.132</td><td>0.439</td></tr>
+              <tr><td>80</td><td>61.49</td><td><strong>0.490</strong></td><td><strong>0.588</strong></td><td><strong>0.612</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- BibTeX -->
+  <div class="content-section" id="BibTeX">
+    <h2 class="section-title">Citation</h2>
+    <div class="bibtex-box">@inproceedings{salamatian-etal-2025-chartgaze,
+    title = "{C}hart{G}aze: Enhancing Chart Understanding in {LVLM}s with Eye-Tracking Guided Attention Refinement",
+    author = "Salamatian, Ali  and
+      Abaskohi, Amirhossein  and
+      Fan, Wan-Cyuan  and
+      Hossain, Mir Rayat Imtiaz  and
+      Sigal, Leonid  and
+      Carenini, Giuseppe",
+    booktitle = "Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing",
+    month = nov,
+    year = "2025",
+    address = "Suzhou, China",
+    publisher = "Association for Computational Linguistics",
+    pages = "12093--12113",
+    doi = "10.18653/v1/2025.emnlp-main.607"
+}</div>
+  </div>
+
+</div>

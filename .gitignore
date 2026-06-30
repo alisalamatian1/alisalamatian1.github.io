@@ -38,3 +38,6 @@ yarn.lock
 
 # Other generated files
 public/
+commands.txt
+tmp/
+papers/

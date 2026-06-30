@@ -1,0 +1,374 @@
+@charset "UTF-8";
+/* Project page styles - used by layout: project */
+
+body {
+  font-family: 'Noto Sans', sans-serif;
+  color: #333;
+  background-color: #ffffff;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Google Sans', 'Noto Sans', sans-serif;
+  color: #202124;
+  margin-top: 0;
+}
+
+.project-wrapper {
+  padding-top: 1.5em;
+  padding-bottom: 3em;
+}
+
+.project-wrapper .container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.header-section {
+  text-align: center;
+  padding: 40px 0 20px;
+}
+
+.paper-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  color: #202124;
+}
+
+.title-highlight {
+  color: #4285F4;
+}
+
+.author-block {
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.author-block a {
+  color: #333;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.author-block a:hover {
+  color: #4285F4;
+  text-decoration: underline;
+}
+
+.affiliation-block {
+  font-size: 0.95rem;
+  color: #5f6368;
+  margin-top: 10px;
+}
+
+.venue-block {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #202124;
+  margin-top: 10px;
+}
+
+/* Link buttons */
+.link-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 28px;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+}
+
+.link-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  text-decoration: none !important;
+  color: #202124 !important;
+  transition: transform 0.2s;
+}
+
+.link-btn:hover {
+  transform: translateY(-3px);
+  text-decoration: none !important;
+}
+
+.link-btn .btn-icon {
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+  color: #333;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.link-btn:hover .btn-icon {
+  color: #4285F4;
+}
+
+.link-btn span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #202124;
+}
+
+/* Abstract box */
+.abstract-container {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 24px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.abstract-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 14px;
+  color: #202124;
+}
+
+.abstract-text {
+  font-size: 1rem;
+  text-align: justify;
+  color: #3c4043;
+  margin: 0;
+}
+
+/* Section separators */
+hr.section-divider {
+  border: 0;
+  height: 1px;
+  background: #dadce0;
+  margin: 44px 0;
+}
+
+/* Content sections */
+.content-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
+  color: #202124;
+  position: relative;
+}
+
+.section-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.section-title::after {
+  content: ' #';
+  opacity: 0;
+  color: #4285F4;
+  font-weight: 400;
+  font-size: 0.8em;
+  transition: opacity 0.2s;
+}
+
+.section-title:hover::after {
+  opacity: 1;
+}
+
+.subsection-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 24px 0 12px;
+  color: #202124;
+}
+
+/* Figures */
+.figure-img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: block;
+  margin: 0 auto;
+}
+
+.figure-caption {
+  margin-top: 14px;
+  font-size: 0.9rem;
+  color: #5f6368;
+  text-align: center;
+  font-style: italic;
+  max-width: 88%;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.figure-wrap {
+  margin: 28px 0;
+}
+
+/* Two-column figures grid */
+.figures-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 28px 0;
+}
+
+@media (max-width: 640px) {
+  .figures-grid {
+    grid-template-columns: 1fr;
+  }
+  .paper-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* Body text in sections */
+.text-content {
+  font-size: 1rem;
+  color: #3c4043;
+  margin-top: 12px;
+}
+
+.text-content p {
+  margin-bottom: 0.8em;
+}
+
+.text-content ul {
+  padding-left: 20px;
+}
+
+.text-content li {
+  margin-bottom: 6px;
+}
+
+/* Data tables */
+.table-container {
+  margin: 24px 0;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.data-table th {
+  background-color: #f1f3f4;
+  color: #202124;
+  font-weight: 700;
+  text-align: center;
+  padding: 11px 14px;
+  border-bottom: 2px solid #dadce0;
+  white-space: nowrap;
+}
+
+.data-table th.left { text-align: left; }
+
+.data-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid #f1f3f4;
+  color: #3c4043;
+  text-align: center;
+}
+
+.data-table td.left { text-align: left; }
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table .group-header td {
+  background-color: #e8f0fe;
+  color: #1a56c4;
+  font-weight: 700;
+  text-align: left;
+  border-top: 2px solid #dadce0;
+  border-bottom: 1px solid #c3d5f5;
+}
+
+.data-table .indent td.left {
+  padding-left: 28px;
+}
+
+.data-table td strong { color: #202124; }
+
+/* Collapsible ablation boxes */
+.ablation-box {
+  background-color: #ffffff;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 0;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.ablation-box:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.ablation-box summary {
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #202124;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  user-select: none;
+}
+
+.ablation-box summary::-webkit-details-marker { display: none; }
+
+.ablation-box summary::after {
+  content: '+';
+  font-size: 1.3rem;
+  font-weight: 400;
+  color: #5f6368;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.ablation-box[open] summary::after { content: '\2212'; }
+.ablation-box[open] summary {
+  border-bottom: 1px solid #f1f3f4;
+  background-color: #f8f9fa;
+}
+
+.ablation-box .ablation-content {
+  padding: 16px 20px;
+}
+
+.ablation-desc {
+  font-size: 0.92rem;
+  color: #5f6368;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+/* BibTeX */
+.bibtex-box {
+  background-color: #f1f3f4;
+  border-radius: 8px;
+  padding: 20px 24px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  font-size: 0.85rem;
+  color: #333;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.6;
+}

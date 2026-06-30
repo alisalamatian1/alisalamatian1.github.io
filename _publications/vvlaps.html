@@ -1,0 +1,182 @@
+---
+title: "V-VLAPS"
+layout: project
+permalink: /publications/vvlaps/
+---
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header-section">
+    <h1 class="paper-title">
+      <span class="title-highlight">V-VLAPS</span>: Value-Guided Vision-Language-Action<br>Planning and Search
+    </h1>
+
+    <div class="author-block">
+      Ke Ren<sup>*&dagger;</sup>,&nbsp;
+      Ali Salamatian<sup>*&dagger;</sup>,&nbsp;
+      Kieran Pattison<sup>*</sup>,&nbsp;
+      Cyrus Neary
+    </div>
+
+    <div class="affiliation-block">
+      University of British Columbia
+    </div>
+
+    <div class="notes-block">
+      <sup>*</sup>Equal contribution &nbsp;&nbsp; <sup>&dagger;</sup>Project lead
+    </div>
+
+    <div class="venue-block">Preprint &middot; ICML 2026 DEMO Workshop</div>
+
+    <!-- Link buttons -->
+    <div class="link-buttons">
+      <a href="http://arxiv.org/abs/2601.00969" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-file-alt"></i></span>
+        <span>Paper</span>
+      </a>
+      <a href="/files/VVLAPS.pdf" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+        <span>PDF</span>
+      </a>
+      <a href="#BibTeX" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-quote-right"></i></span>
+        <span>Citation</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Overview Figure -->
+  <div class="figure-wrap">
+    <img src="{{ site.url }}/images/vvlaps/overview.png" alt="V-VLAPS Overview" class="figure-img">
+    <p class="figure-caption">
+      Overview of V-VLAPS. At each MCTS node, the current observation and language instruction are passed through a frozen VLA backbone (Octo) and a lightweight value head (MLP) to produce a scalar value estimate. This value enters the PUCT scoring rule to bias node selection toward higher-return branches (green), down-weighting low-value branches (red).
+    </p>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract-container">
+    <div class="abstract-title">Abstract</div>
+    <p class="abstract-text">
+      Vision-language-action (VLA) models provide strong action priors for robotic manipulation, but their reactive behavior can fail under distribution shift and long-horizon task structure. Recent VLA-guided planning methods improve execution by using pretrained policies to guide tree search, yet node selection still depends heavily on policy priors and visit-count exploration. Consequently, when the policy favors poor actions, the planner lacks a learned value signal to correct this bias. Prior work has shown that VLA representations encode rollout success and failure information, suggesting that they may also support value estimation during planning. We introduce Value-Guided Vision-Language-Action Planning and Search (V-VLAPS), which augments VLA-guided planning with a lightweight value head trained on offline VLA rollouts to predict Monte Carlo returns. These predictions guide Monte Carlo Tree Search in simulation toward higher-value branches. Across five LIBERO suites, V-VLAPS matches value-free planning baseline at the default search budget in aggregate, and analysis shows that many hard failures are root-level timeouts where predicted values are weakly separated. With a larger search budget, V-VLAPS improves over the baseline in all task suites with <strong>+6 percentage points</strong> on LIBERO-Object and <strong>+4 percentage points</strong> on LIBERO-10.
+    </p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Motivation -->
+  <div class="content-section">
+    <h2 class="section-title" id="motivation"><a href="#motivation">Motivation</a></h2>
+    <div class="text-content">
+      <p>
+        VLA models like Octo act reactively: at each step they map observations and a language instruction to an action chunk, without planning about future consequences. Under distribution shift or in long-horizon tasks, this brittleness causes hard-to-recover failures. Monte Carlo Tree Search (MCTS) addresses this by simulating candidate action sequences in a simulator before committing to one, but existing VLA-guided search (VLAPS) has no <em>learned</em> estimate of state value. Node selection relies only on the VLA action prior and a visit-count bonus, meaning if the policy assigns high probability to poor actions, the search has no way to detect this.
+      </p>
+      <p>
+        The key insight: <strong>VLA latent representations already encode task success/failure information.</strong> Prior work (SAFE) showed a small MLP probe on a VLA's frozen features can predict failure. We extend this from passive failure detection to <em>active search guidance</em>. A similar probe architecture, trained to predict Monte Carlo discounted returns, is fed into the PUCT scoring rule to bias the search.
+      </p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Method -->
+  <div class="content-section">
+    <h2 class="section-title" id="method"><a href="#method">Method</a></h2>
+    <div class="text-content">
+      <p>V-VLAPS has three components built on top of VLAPS:</p>
+      <ul>
+        <li><strong>Offline data collection:</strong> We roll out the frozen Octo VLA on LIBERO tasks and compute Monte Carlo discounted returns for successful episodes and 0 for failures. States are paired with these value targets to form a training set.</li>
+        <li><strong>Value head training:</strong> A lightweight 3-layer MLP (~2.4M params) is trained via MSE regression on Octo readouts → scalar value. Training data is rebalanced to avoid the value-zero collapse caused by the heavy skew toward failed episodes.</li>
+        <li><strong>Value-guided MCTS:</strong> The value prediction is added as the Q term in VLAPS's PUCT scoring rule, biasing node selection toward branches the value head predicts as leading to task completion.</li>
+      </ul>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/vvlaps/tsne.png" alt="t-SNE of Octo readouts" class="figure-img" style="max-width:580px;">
+      <p class="figure-caption">
+        t-SNE projection of Octo last-layer readouts on LIBERO-Object, colored by Monte Carlo value target. Successful and failed rollouts occupy visually distinct regions, validating that VLA representations carry value-relevant information.
+      </p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Results -->
+  <div class="content-section">
+    <h2 class="section-title" id="results"><a href="#results">Results</a></h2>
+    <div class="text-content">
+      <p>
+        We evaluate three conditions on five LIBERO suites at two search budgets (600s and 1800s per episode, 100 episodes per cell). Both MCTS-based methods dramatically outperform the reactive Octo VLA (+27 pp average). At the default 600s budget, V-VLAPS matches VLAPS in aggregate (both 87.4%). With the extended 1800s budget, V-VLAPS pulls ahead by <strong>+6 pp on LIBERO-Object</strong> and <strong>+4 pp on LIBERO-10</strong>, the most difficult suites.
+      </p>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="left" rowspan="2">Suite</th>
+            <th rowspan="2">VLA<br><small>(no planning)</small></th>
+            <th colspan="2">600s budget</th>
+            <th colspan="2">1800s budget</th>
+          </tr>
+          <tr>
+            <th>VLAPS</th>
+            <th>V-VLAPS</th>
+            <th>VLAPS</th>
+            <th>V-VLAPS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="left">libero_object</td><td>37</td><td>82</td><td>85</td><td>87</td><td><strong>93</strong></td></tr>
+          <tr><td class="left">libero_spatial</td><td>81</td><td>96</td><td>95</td><td>96</td><td><strong>97</strong></td></tr>
+          <tr><td class="left">libero_goal</td><td>88</td><td>92</td><td><strong>93</strong></td><td>90</td><td><strong>93</strong></td></tr>
+          <tr><td class="left">libero_10</td><td>38</td><td>77</td><td>75</td><td>81</td><td><strong>85</strong></td></tr>
+          <tr><td class="left">libero_90</td><td>57</td><td><strong>90</strong></td><td>89</td><td>88</td><td><strong>90</strong></td></tr>
+          <tr class="group-header">
+            <td class="left"><strong>Avg.</strong></td>
+            <td>60.2</td><td>87.4</td><td>87.4</td><td>88.4</td><td><strong>91.6</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="figure-caption" style="margin-top:10px;">
+      Success rate (%) by method and suite. Each cell aggregates 100 episodes. <strong>Bold</strong> V-VLAPS cells highlight gains over VLAPS at the 1800s budget.
+    </p>
+
+    <div class="text-content" style="margin-top:24px;">
+      <p>
+        <strong>Why doesn't the value head help at 600s?</strong> A failure-mode analysis reveals that most failures at 600s are <em>root-level MCTS timeouts</em> — episodes where the search never executes a single action before hitting the wall-time cap. Near the root, all candidate branches are far from task completion, so the value head assigns near-zero predictions to every branch with little discrimination. The extended budget gives MCTS time to reach deeper states where branch values separate, and that's where V-VLAPS gains.
+      </p>
+    </div>
+
+    <div class="table-container" style="max-width:480px; margin:16px auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="left">Method</th>
+            <th>Failures</th>
+            <th>Root timeouts</th>
+            <th>Fraction</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="left">VLAPS</td><td>18</td><td>14</td><td>77.8%</td></tr>
+          <tr><td class="left">V-VLAPS</td><td>15</td><td>13</td><td>86.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="figure-caption">Failure modes on LIBERO-Object tasks 6–8 at the 600s budget. Most failures are root-level timeouts where MCTS never executes an action chunk.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- BibTeX -->
+  <div class="content-section" id="BibTeX">
+    <h2 class="section-title">Citation</h2>
+    <div class="bibtex-box">@inproceedings{vvlaps,
+  title     = {V-VLAPS: Value-Guided Vision-Language-Action Planning and Search},
+  author    = {Ren, Ke and Salamatian, Ali and Pattison, Kieran and Neary, Cyrus},
+  booktitle={Decision-Making from Offline Datasets to Online Adaptation: Black-Box Optimization to Reinforcement Learning}
+}</div>
+  </div>
+</div>

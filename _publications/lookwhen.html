@@ -1,0 +1,213 @@
+---
+title: "LookWhen"
+layout: project
+permalink: /publications/lookwhen/
+---
+
+<div class="container">
+
+  <!-- Header -->
+  <header class="header-section">
+    <h1 class="paper-title">
+      <span class="title-highlight">LookWhen?</span> Fast Video Recognition by<br>Learning When, Where, and What to Compute
+    </h1>
+
+    <div class="author-block">
+      <strong>Ali Salamatian</strong><sup>1&#x25CF;</sup>,&nbsp;
+      Anthony Fuller<sup>2,3&#x25CF;&#x2605;</sup>,&nbsp;
+      Pritam Sarkar<sup>1,3</sup>,&nbsp;
+      James R. Green<sup>2</sup>,&nbsp;
+      Leonid Sigal<sup>1,3&#x2605;</sup>,&nbsp;
+      Evan Shelhamer<sup>1,2,3&#x2605;</sup>
+    </div>
+
+    <div class="affiliation-block">
+      <sup>1</sup>University of British Columbia &nbsp;&bull;&nbsp;
+      <sup>2</sup>Carleton University &nbsp;&bull;&nbsp;
+      <sup>3</sup>Vector Institute
+    </div>
+
+    <div class="notes-block">
+      <sup>&#x25CF;</sup>Co-first author &nbsp;&nbsp; <sup>&#x2605;</sup>Co-advising author
+    </div>
+
+    <div class="venue-block">Preprint</div>
+
+    <!-- Link buttons -->
+    <div class="link-buttons">
+      <a href="https://github.com/alisalamatian1/LookWhen" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fab fa-github"></i></span>
+        <span>Code</span>
+      </a>
+      <a href="/papers/LookWhen.pdf" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
+        <span>PDF</span>
+      </a>
+      <a href="#BibTeX" class="link-btn">
+        <span class="btn-icon"><i class="fas fa-quote-right"></i></span>
+        <span>Citation</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Teaser: qualitative example -->
+  <div class="figure-wrap">
+    <img src="{{ site.url }}/images/lookwhen/qualitative-example.png" alt="LookWhen token selection on a diving video" class="figure-img">
+    <p class="figure-caption">
+      LookWhen selects the most <em>unique</em> tokens across space and time on a 16-frame diving clip. Highlighted patches are scored highest by the selector and passed to the deep extractor, coverage concentrates on the diver and the water disturbance, not the static background.
+    </p>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract-container">
+    <div class="abstract-title">Abstract</div>
+    <p class="abstract-text">
+      Transformers dominate video recognition. They split videos into tokens, and processing them has expensive superlinear computational cost. Yet videos are filled with redundancy, so we can question the need for this expense. We introduce LookWhen, a selector–extractor framework that factorizes video recognition into learning <em>when</em>, <em>where</em>, and <em>what</em> to compute. Our shallow selector gets a scaled-down video and quickly scores all tokens across space-time, while our deep extractor gets the top-K selected tokens to approximate full-video representations without actually processing all the tokens. A key challenge is defining effective supervision for selection and extraction. For selection pre-training, we introduce a score on representations that ranks tokens by uniqueness using a simple nearest-neighbor distance. For extraction pre-training, we distill both a video teacher <em>and</em> an image teacher, for which we normalize its frame-wise representations to learn <em>what changes</em> within videos. Through experiments on Kinetics-400, SSv2, Epic-Kitchens, Diving48, Jester, and Charades, we show that LookWhen achieves a better accuracy-computation trade-off than efficient models and upgraded baselines of similar size. LookWhen Pareto-dominates in accuracy-FLOPs on 9 of 12 cases (6 tasks × 2 settings) and is <strong>6.7× faster than InternVideo2-B</strong> at equal accuracy.
+    </p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Motivation -->
+  <div class="content-section">
+    <h2 class="section-title" id="motivation"><a href="#motivation">Motivation</a></h2>
+    <div class="text-content">
+      <p>
+        Video transformers split clips into space-time tokens and process them all with expensive, superlinear computation, yet most tokens are redundant. Static backgrounds, slowly-changing regions, and repeated frames all carry little new information. Existing token reduction methods (ToMe, RLT, vid-TLDR) still process all tokens in early layers before merging or pruning, limiting efficiency. Others skip tokens but cannot recover accuracy at high sparsity.
+      </p>
+      <p>
+        The key question: <em>which tokens actually matter</em>, and can we decide <strong>before</strong> running expensive layers? Our answer is to train a lightweight, low-resolution selector that scores every token for uniqueness, and to only run the deep extractor on the selected top-K.
+      </p>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/lookwhen/top1dist-comparison.png" alt="Comparison of InternVideo2 attention, DINOv3 attention, and DINOv3 top1-distance" class="figure-img" style="max-width:720px;">
+      <p class="figure-caption">
+        Why not just use attention maps? Across 8 frames of a wolf entering the scene, InternVideo2 attention and DINOv3 attention stay sparse and noisy until the wolf is large and salient. Our <em>top-1 distance</em> score (each patch's distance to its nearest neighbor in feature space) reacts earlier and covers the wolf more completely as soon as it appears, making it a better target for the selector to learn from.
+      </p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Method -->
+  <div class="content-section">
+    <h2 class="section-title" id="method"><a href="#method">Method: Selector–Extractor</a></h2>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/lookwhen/method-overview.png" alt="LookWhen method overview" class="figure-img">
+      <p class="figure-caption">
+        <strong>(a) Inference and fine-tuning:</strong> the selector scores downscaled dense tokens, top-K tokens are gathered into sparse tokens, and the extractor processes them into video/frame/patch features. <strong>(b) Computing targets for pre-training:</strong> a video teacher supplies global video targets; an image teacher's per-frame features are normalized to produce patch, frame, and videotargets, and their top-1 distance produces the selector's uniqueness target.
+      </p>
+    </div>
+
+    <div class="text-content">
+      <p>LookWhen factorizes recognition into three learned decisions:</p>
+      <ul>
+        <li><strong>When &amp; where (Selector):</strong> A shallow ViT-B processes a scaled-down video and scores each space-time token by predicted uniqueness. This is fast: low resolution means far fewer tokens, and the network is shallow.</li>
+        <li><strong>What (Extractor):</strong> A deep ViT-B receives only the top-K tokens from the full-resolution video (typically 5–30% of all tokens preset by the user) and extracts rich features from this sparse input.</li>
+        <li><strong>Pre-training targets:</strong>
+          <ul>
+            <li>For selection: <em>top-1 distance</em>, each patch's distance to its nearest neighbor in the DINOv3 feature space, measuring how unique that patch is relative to other spatial locations and frames.</li>
+            <li>For extraction: distillation from two teachers, a video teacher (InternVideo2) for global representations, and a frame-normalized image teacher (DINOv3) to amplify what <em>changes</em> within the video.</li>
+          </ul>
+        </li>
+      </ul>
+      <p>
+        Crucially, teachers are only needed during pre-training. At inference and fine-tuning time, LookWhen runs only the selector and extractor, making it both accurate and efficiently deployable.
+      </p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Results -->
+  <div class="content-section">
+    <h2 class="section-title" id="results"><a href="#results">Results</a></h2>
+    <div class="text-content">
+      <p>
+        We compare LookWhen against different ViT-B video models and other adaptive-computation baselines applied to our video teacher (IV2+RLT, IV2+vid-TLDR). LookWhen <strong>Pareto-dominates</strong> on 9 of 12 accuracy-FLOPs evaluations. Realized throughput gains are even larger: <strong>6.7× faster than InternVideo2-B</strong> at equal mean accuracy.
+      </p>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/lookwhen/efficiency-plots.png" alt="Accuracy vs FLOPs across 6 datasets, linear probe and fine-tune" class="figure-img">
+      <p class="figure-caption">
+        Accuracy vs. inference FLOPs for linear probing (LP) and fine-tuning (FT) across six datasets. LookWhen (&#9679; green) Pareto-dominates IV2+RLT (&#9650; purple) and IV2+vid-TLDR (&#9632; brown) on 9 of 12 panels, with the largest gains in linear probing, e.g. &gt;10% higher accuracy on Diving48 LP and is sometimes even better than IV2 (&#9734;).
+      </p>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="left">Model</th>
+            <th>Params (M)</th>
+            <th>K400 FLOPs</th>
+            <th>K400 Top-1</th>
+            <th>SSv2 FLOPs</th>
+            <th>SSv2 Top-1</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group-header"><td colspan="6">ViT-B / Swin-B / Mamba-M baselines</td></tr>
+          <tr><td class="left">UMT-B800e</td><td>87</td><td>180×4×3</td><td>85.7</td><td>180×2×3</td><td>70.8</td></tr>
+          <tr><td class="left">VideoMAEv2</td><td>87</td><td>180×5×3</td><td>81.5</td><td>180×2×3</td><td>71.2</td></tr>
+          <tr><td class="left">VideoMambaPro</td><td>72</td><td>392×4×3</td><td>84.0</td><td>183×4×3</td><td>69.4</td></tr>
+          <tr><td class="left">VideoMAE + RLT</td><td>87</td><td>120×4×3</td><td>80.1</td><td>120×4×3</td><td>70.2</td></tr>
+          <tr><td class="left">VideoMAE + LITE</td><td>87</td><td>46×5×3</td><td>78.4</td><td>46×2×3</td><td>68.3</td></tr>
+          <tr class="group-header"><td colspan="6">LookWhen (ours)</td></tr>
+          <tr><td class="left"><strong>LookWhen (70% sparse)</strong></td><td>106</td><td><strong>108×4×3</strong></td><td><strong>84.6</strong></td><td><strong>108×2×3</strong></td><td><strong>72.0</strong></td></tr>
+          <tr><td class="left"><strong>LookWhen (90% sparse)</strong></td><td>106</td><td><strong>40×4×3</strong></td><td><strong>82.6</strong></td><td><strong>40×2×3</strong></td><td><strong>69.3</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="figure-caption" style="margin-top:10px;">
+      LookWhen achieves the best accuracy-FLOPs trade-off.
+    </p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Ablation -->
+  <div class="content-section">
+    <h2 class="section-title" id="ablation"><a href="#ablation">Ablation</a></h2>
+    <div class="text-content">
+      <p>
+        We study the key design choices behind LookWhen's pre-training: <em>what</em> the selector should learn to predict, and <em>what</em> the extractor should learn to represent. All ablations use 90% sparsity and evaluate with both linear probing (LP) and fine-tuning (FT) across six datasets.
+      </p>
+    </div>
+
+    <h3 class="subsection-title">When &amp; where to select: selector targets</h3>
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/lookwhen/ablation-selector.png" alt="Ablation: selector pre-training targets" class="figure-img">
+      <p class="figure-caption">
+        <strong>(a) Attention vs. token uniqueness.</strong> Training the selector to predict <em>top1-distance</em> (uniqueness in DINOv3 feature space) outperforms selecting highly-attended tokens.
+        <strong>(b) Computing token uniqueness.</strong> Using K=1 (nearest-neighbor distance) performs best on average.
+      </p>
+    </div>
+
+    <h3 class="subsection-title">What to extract: extractor targets</h3>
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/lookwhen/ablation-extractor.png" alt="Ablation: extractor pre-training targets" class="figure-img">
+      <p class="figure-caption">
+        <strong>(a) Video-token target.</strong> Distilling <em>both</em> InternVideo2's video token and a time-normalized DINOv3 video token (highlighted row) outperforms either teacher alone.
+        <strong>(b) Frame and patch-token targets.</strong> Adding frame and patch distillation losses to the full IV2+DINOv3 configuration (highlighted row) provides further gains, with the largest improvements on Diving48 (+7.7% LP) and Jester (+10% LP).
+      </p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- BibTeX -->
+  <div class="content-section" id="BibTeX">
+    <h2 class="section-title">Citation</h2>
+    <div class="bibtex-box">@article{salamatian2026lookwhen,
+  title   = {LookWhen? Fast Video Recognition by Learning When, Where, and What to Compute},
+  author  = {Salamatian, Ali and Fuller, Anthony and Sarkar, Pritam and Green, James R. and Sigal, Leonid and Shelhamer, Evan},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</div>
+  </div>
+
+</div>
