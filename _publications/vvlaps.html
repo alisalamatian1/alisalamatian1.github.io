@@ -170,6 +170,25 @@ permalink: /publications/vvlaps/
 
   <hr class="section-divider">
 
+  <!-- Qualitative Results -->
+  <div class="content-section">
+    <h2 class="section-title" id="qualitative"><a href="#qualitative">Qualitative Results</a></h2>
+    <div class="text-content">
+      <p>
+        A representative LIBERO-Object rollout for the instruction <em>"Pick up the alphabet soup and place it in the basket."</em> The value-free <strong>VLAPS</strong> baseline (top) drifts around the workspace and leaves the basket empty, while <strong>V-VLAPS</strong> (bottom) grasps the object and places it in the basket. The value head's prediction (bottom row) rises over the rollout as the search commits to the successful branch, with the red marker indicating the current step for each frame above.
+      </p>
+    </div>
+
+    <div class="figure-wrap">
+      <img src="{{ site.url }}/images/vvlaps/qualitative.png" alt="Qualitative comparison of VLAPS and V-VLAPS rollouts" class="figure-img">
+      <p class="figure-caption">
+        Frame-by-frame comparison of VLAPS (baseline) and V-VLAPS (ours) on a LIBERO-Object pick-and-place task. Frames are sampled at matched progress; the bottom row shows V-VLAPS's learned value prediction at each corresponding step.
+      </p>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
   <!-- BibTeX -->
   <div class="content-section" id="BibTeX">
     <h2 class="section-title">Citation</h2>
