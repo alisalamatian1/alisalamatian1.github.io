@@ -8,7 +8,7 @@ _site/
 node_modules/
 
 # Bundler and Ruby gems
-/.vendor/bundle
+vendor/
 
 # OS files
 .DS_Store

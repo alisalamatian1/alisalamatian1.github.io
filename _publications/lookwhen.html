@@ -31,7 +31,7 @@ permalink: /publications/lookwhen/
       <sup>&#x25CF;</sup>Co-first author &nbsp;&nbsp; <sup>&#x2605;</sup>Co-advising author
     </div>
 
-    <div class="venue-block">Preprint</div>
+    <div class="venue-block">NeurIPS 2026</div>
 
     <!-- Link buttons -->
     <div class="link-buttons">
@@ -39,9 +39,9 @@ permalink: /publications/lookwhen/
         <span class="btn-icon"><i class="fab fa-github"></i></span>
         <span>Code</span>
       </a>
-      <a href="/papers/LookWhen.pdf" target="_blank" class="link-btn">
-        <span class="btn-icon"><i class="fas fa-file-pdf"></i></span>
-        <span>PDF</span>
+      <a href="https://arxiv.org/abs/2605.06809" target="_blank" class="link-btn">
+        <span class="btn-icon"><i class="ai ai-arxiv"></i></span>
+        <span>arXiv</span>
       </a>
       <a href="#BibTeX" class="link-btn">
         <span class="btn-icon"><i class="fas fa-quote-right"></i></span>
@@ -202,12 +202,38 @@ permalink: /publications/lookwhen/
   <!-- BibTeX -->
   <div class="content-section" id="BibTeX">
     <h2 class="section-title">Citation</h2>
-    <div class="bibtex-box">@article{salamatian2026lookwhen,
-  title   = {LookWhen? Fast Video Recognition by Learning When, Where, and What to Compute},
-  author  = {Salamatian, Ali and Fuller, Anthony and Sarkar, Pritam and Green, James R. and Sigal, Leonid and Shelhamer, Evan},
-  journal = {arXiv preprint},
-  year    = {2026}
-}</div>
+    <div class="bibtex-wrap">
+      <button type="button" class="bibtex-copy" onclick="copyBibtex(this)" aria-label="Copy citation">
+        <i class="far fa-copy"></i> <span>Copy</span>
+      </button>
+      <pre class="bibtex-box" id="bibtex-lookwhen">{% raw %}@inproceedings{salamatian2026lookwhen,
+  title     = {{LookWhen?} Fast Video Recognition by Learning When, Where, and What to Compute},
+  author    = {Salamatian, Ali and Fuller, Anthony and Sarkar, Pritam and Green, James R. and Sigal, Leonid and Shelhamer, Evan},
+  booktitle = {Advances in Neural Information Processing Systems},
+  year      = {2026}
+}{% endraw %}</pre>
+    </div>
+    <script>
+      function copyBibtex(btn) {
+        var text = btn.parentNode.querySelector('.bibtex-box').innerText;
+        var label = btn.querySelector('span');
+        var done = function () {
+          label.textContent = 'Copied!';
+          setTimeout(function () { label.textContent = 'Copy'; }, 2000);
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(done);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done();
+        }
+      }
+    </script>
   </div>
 
 </div>

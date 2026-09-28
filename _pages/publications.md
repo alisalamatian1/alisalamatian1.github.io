@@ -24,7 +24,7 @@ author_profile: true
       [2] Ke (Steve) Ren<sup>*</sup>, <strong>Ali Salamatian</strong><sup>*</sup>, Kieran Pattison<sup>*</sup>, Cyrus Neary<br>
       <sup>*</sup>Equal contribution<br>
       <em>V-VLAPS: Value-Guided Vision-Language-Action Planning and Search</em><br>
-      Preprint &nbsp;&middot;&nbsp; <a href="http://arxiv.org/abs/2601.00969">Paper</a> &nbsp;&middot;&nbsp; <a href="/publications/vvlaps/">Project</a>
+      ICML 2026 Workshop &nbsp;&middot;&nbsp; <a href="http://arxiv.org/abs/2601.00969">Paper</a> &nbsp;&middot;&nbsp; <a href="/publications/vvlaps/">Project</a>
   </div>
 </div>
 
@@ -34,6 +34,6 @@ author_profile: true
       [3] <strong>Ali Salamatian</strong><sup>*</sup>, Anthony Fuller<sup>*</sup>, Pritam Sarkar, James R. Green, Leonid Sigal, Evan Shelhamer<br>
       <sup>*</sup>Equal contribution<br>
       <em>LookWhen? Fast Video Recognition by Learning When, Where, and What to Compute</em><br>
-      Preprint &nbsp;&middot;&nbsp; <a href="https://arxiv.org/abs/2605.06809">Paper</a> &nbsp;&middot;&nbsp; <a href="/publications/lookwhen/">Project</a> 
+      NeurIPS 2026 &nbsp;&middot;&nbsp; <a href="https://arxiv.org/abs/2605.06809">Paper</a> &nbsp;&middot;&nbsp; <a href="/publications/lookwhen/">Project</a> 
   </div>
 </div>
