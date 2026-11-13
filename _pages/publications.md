@@ -34,6 +34,6 @@ author_profile: true
       [3] <strong>Ali Salamatian</strong><sup>*</sup>, Anthony Fuller<sup>*</sup>, Pritam Sarkar, James R. Green, Leonid Sigal, Evan Shelhamer<br>
       <sup>*</sup>Equal contribution<br>
       <em>LookWhen? Fast Video Recognition by Learning When, Where, and What to Compute</em><br>
-      NeurIPS 2026 &nbsp;&middot;&nbsp; <a href="https://arxiv.org/abs/2605.06809">Paper</a> &nbsp;&middot;&nbsp; <a href="/publications/lookwhen/">Project</a> 
+      NeurIPS 2026 &nbsp;&middot;&nbsp; <a href="https://arxiv.org/abs/2605.06809">Paper</a> &nbsp;&middot;&nbsp; <a href="/publications/lookwhen/">Project</a> &nbsp;&middot;&nbsp; <a href="https://recorder-v3.slideslive.com/?share=114809&s=da4f456f-a50e-40fe-ba2a-68c2b0847a5b">Presentation</a> 
   </div>
 </div>
